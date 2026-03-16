@@ -3,12 +3,12 @@ from src.components.component import BasicComponent, Label
 from reportlab.pdfgen.canvas import Canvas
 
 class Inductor(BasicComponent):
-    def __init__(self, part: str | Label, inductance: str, i_max: str, package: str):
-        self.value = part
-        self.type = "polyfuse"
-        self.str1 = "L = {}".format(inductance)
-        self.str2 = "I = {}".format(i_max)
-        self.str3 = "{}".format(package)
+    def __init__(self, inductance: str, i_max: str, package: str, label_scale: float = 1.0):
+        self.value = Label("{} {}".format(inductance, i_max), label_scale)
+        self.type = "inductor"
+        self.str1 = "{}".format(package)
+        self.str2 = "L = {}".format(inductance)
+        self.str3 = "I = {}".format(i_max)
 
     def draw_polyfuse(self, c: Canvas, x: float, y: float, size: float) -> None:
         arc_size = size / 2
