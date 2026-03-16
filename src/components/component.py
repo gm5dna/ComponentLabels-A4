@@ -219,9 +219,10 @@ class BasicComponent(Component):
 
         text_x = rect.left + rect.width/2 
         text_bottom = rect.bottom + rect.height/4 - value_font_size/3
-        c.setFont('main', value_font_size * 1)
-        c.drawCentredString(text_x, text_bottom, self.value)
-        c.drawCentredString(text_x, text_bottom+rect.height/2, self.value)
+        label = Label.to_label(self.value)
+        c.setFont('main', value_font_size * label.size)
+        c.drawCentredString(text_x, text_bottom, label.text)
+        c.drawCentredString(text_x, text_bottom+rect.height/2, label.text)
 
         small_text_x = rect.left + 5 * rect.width / 6
         small_text_bottom = rect.bottom + rect.height/8 + rect.height/4 - small_font_size/3
@@ -259,4 +260,19 @@ class BasicComponent(Component):
             self.draw_icon(c, rect.left + rect.width / 6, rect.bottom + rect.height/4 + i, rect.height / 6)
         
         c.setLineCap(0)
+
+class Label:
+    def __init__(self, text: str, size: float):
+        self.text = text
+        self.size = size
+
+    def __str__(self):
+        return self.text
+
+    @staticmethod
+    def to_label(text: str | Label):
+        if isinstance(text, Label):
+            return text
+
+        return Label(text, 1.0)
 
