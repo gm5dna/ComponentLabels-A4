@@ -14,6 +14,7 @@ from src.components.threadedinsert import ThreadedInsert
 from src.components.spring import CompressionSpring, ExtensionSpring
 from src.components.generic import Generic
 from src.components.polyfuse import Polyfuse
+from src.components.inductor import Inductor
 from src.paperconfig import PaperConfig, AVERY_5260, AVERY_L7157, VYSOCINA
 from src.stickerrect import StickerRect
 
@@ -134,6 +135,22 @@ def main() -> None:
 
     components.append(None)
     components.append(None)
+
+    # Inductors
+
+    components.append(Inductor("2.2 μH", "1.85 A", "1210", 0.75))
+    components.append(Inductor("2.2 μH", "4.2 A", "1210", 0.75))
+    components.append(Inductor("1 μH", "0.6 A", "0603"))
+    components.append(Inductor("2.2 μH", "1 A", "0805"))
+    components.append(Inductor("1 μH", "0.6 A", "0603"))
+    components.append(Inductor("4.7 μH", "1.1 A", "1008", 0.75))
+    components.append(Inductor("3.3 μH", "2.4 A", "0806", 0.75))
+    components.append(Inductor("1 μH", "1.6 A", "0603"))
+    components.append(Inductor("4.7 μH", "0.62 A", "0603", 0.75))
+    components.append(Inductor("4.7 μH", "4.5 A", "5.4x5.2", 0.75))
+    components.append(Inductor("1 μH", "1.3 A", "0805"))
+    components.append(Inductor("1 μH", "4.1 A", "1008"))
+    components.append(Inductor("68 μH", "1.33 A", "8.7 dia", 0.75))
 
     # BJTs
 
