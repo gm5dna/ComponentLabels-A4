@@ -1,9 +1,9 @@
-from src.components.component import BasicComponent
+from src.components.component import BasicComponent, Label
 
 from reportlab.pdfgen.canvas import Canvas
 
 class ThreadedInsert(BasicComponent):
-    def __init__(self, name: str, d: str, l: str):
+    def __init__(self, name: str | Label, d: str, l: str):
         self.value = name
         self.type = "insert"
         self.str1 = "d = {}".format(d)

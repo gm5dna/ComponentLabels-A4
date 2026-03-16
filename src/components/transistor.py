@@ -1,11 +1,11 @@
-from src.components.component import BasicComponent
+from src.components.component import BasicComponent, Label
 
 from reportlab.pdfgen.canvas import Canvas
 
 from math import atan, pi, hypot
 
 class BipolarJunctionTransistor(BasicComponent):
-    def __init__(self, name: str, cpin: str, bpin: str, epin: str, vbe: str, ic: str, vce: str):
+    def __init__(self, name: str | Label, cpin: str, bpin: str, epin: str, vbe: str, ic: str, vce: str):
         self.value = name
         self.type = "BJT"
         self.str1 = "Vbe = {}".format(vbe)
@@ -36,7 +36,7 @@ class NPNBJT(BipolarJunctionTransistor):
         self.draw_arrow(c, x, y - size / 4, hypot(size / 1.5, size / 2), size / 3, -atan(1.5/2))
 
 class PNPBJT(BipolarJunctionTransistor):
-    def __init__(self, name: str, cpin: str, bpin: str, epin: str, vbe: str, ic: str, vce: str):
+    def __init__(self, name: str | Label, cpin: str, bpin: str, epin: str, vbe: str, ic: str, vce: str):
         super().__init__(name, epin, bpin, cpin, vbe, ic, vce)
 
     def draw_icon(self, c: Canvas, x: float, y: float, size: float) -> None:
@@ -44,7 +44,7 @@ class PNPBJT(BipolarJunctionTransistor):
         self.draw_arrow(c, x + size / 1.5, y + 3 * size / 4, size / 2, size / 3, atan(1.5/2) + pi)
 
 class FieldEffectTransistor(BasicComponent):
-    def __init__(self, name: str, gpin: str, dpin: str, spin: str, vgs: str, id: str, vds: str):
+    def __init__(self, name: str | Label, gpin: str, dpin: str, spin: str, vgs: str, id: str, vds: str):
         self.value = name
         self.type = "FET"
         self.str1 = "Vgs = {}".format(vgs)

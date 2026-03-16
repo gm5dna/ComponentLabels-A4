@@ -1,12 +1,9 @@
-from src.stickerrect import StickerRect
-from src.components.component import BasicComponent
+from src.components.component import BasicComponent, Label
 
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.lib.colors import black, toColor
-from reportlab.lib.units import inch
 
 class Generic(BasicComponent):
-    def __init__(self, text: str):
+    def __init__(self, text: str | Label):
         self.value = text
         self.type = "generic"
         self.str1 = None
