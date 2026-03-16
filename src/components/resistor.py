@@ -2,15 +2,16 @@ from src.stickerrect import StickerRect
 from src.components.component import Component
 
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.lib.colors import black, toColor, red
+from reportlab.lib.colors import black, toColor, red, blue
 from reportlab.lib.units import inch
 
 import math
 
 class Resistor(Component):
-    def __init__(self, ohms: float, precise: bool = False):
+    def __init__(self, ohms: float, precise: bool = False, array: bool = False):
         self.units = "\u2126"
         self.precise = precise
+        self.array = array
 
         exp = 0
         val = 0
@@ -146,6 +147,8 @@ class Resistor(Component):
         text_middle = rect.left + rect.width/2
         text_bottom = rect.bottom + rect.height/4 - value_font_size/5
         c.setFont('main', value_font_size * 1)
+        if self.array:
+            c.setFillColor(blue)
         if self.precise:
             c.setFillColor(red)
 
