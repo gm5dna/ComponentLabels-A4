@@ -218,8 +218,8 @@ class BasicComponent(Component):
         small_font_size = 0.08 * inch
 
         text_x = rect.left + rect.width/2 
-        text_bottom = rect.bottom + rect.height/4 - value_font_size/3
         label = Label.to_label(self.value)
+        text_bottom = rect.bottom + rect.height/4 - value_font_size * label.size/3
         c.setFont('main', value_font_size * label.size)
         c.drawCentredString(text_x, text_bottom, label.text)
         c.drawCentredString(text_x, text_bottom+rect.height/2, label.text)
