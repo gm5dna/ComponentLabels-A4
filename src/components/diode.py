@@ -1,12 +1,12 @@
-from src.components.component import BasicComponent
+from src.components.component import BasicComponent, Label
 
-from reportlab.lib.colors import Color, black
+from reportlab.lib.colors import Color
 from reportlab.pdfgen.canvas import Canvas
 
 from math import atan
 
 class Diode(BasicComponent):
-    def __init__(self, name: str, vf: str, ifwd: str, vr: str):
+    def __init__(self, name: str | Label, vf: str, ifwd: str, vr: str):
         self.value = name
         self.type = "diode"
         self.str1 = "Vf = {}".format(vf)

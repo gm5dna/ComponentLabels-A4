@@ -1,11 +1,11 @@
 from reportlab.pdfgen.canvas import Canvas
 
-from src.components.component import BasicComponent
+from src.components.component import BasicComponent, Label
 
 from math import sin, cos, pi
 
 class Nut(BasicComponent):
-    def __init__(self, name: str, h: str, s: str, d: str):
+    def __init__(self, name: str | Label, h: str, s: str, d: str):
         self.value = name
         self.type = "nut"
         self.str1 = "h = {}".format(h)

@@ -5,7 +5,7 @@ from reportlab.lib.colors import Color, black, HexColor, gray
 from reportlab.lib.units import inch
 
 from typing import List
-from math import pow, sin, cos, pi
+from math import sin, cos, pi
 
 class Component:
     def __init__(self):
