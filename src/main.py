@@ -3,7 +3,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-from src.components.component import Component
+from src.components.component import Component, Label
 from src.components.resistor import Resistor
 from src.components.capacitor import Capacitor
 from src.components.transistor import NPNBJT, PNPBJT, NMOSFET, PMOSFET
@@ -12,6 +12,8 @@ from src.components.nut import SquareNut, HexNut, Washer
 from src.components.screw import RecessedHeadScrew, RoundHeadScrew, FlatHeadScrew
 from src.components.threadedinsert import ThreadedInsert
 from src.components.spring import CompressionSpring, ExtensionSpring
+from src.components.generic import Generic
+from src.components.polyfuse import Polyfuse
 from src.paperconfig import PaperConfig, AVERY_5260, AVERY_L7157, VYSOCINA
 from src.stickerrect import StickerRect
 
@@ -97,7 +99,7 @@ def main() -> None:
         # E24
         # 1, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2, 2.2, 2.4, 2.7, 3, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1
     ]
-    
+
     for exponent in range(6): # Ohms to 100kOhms (exclusive)
         for value in common_resistor_values:
             components.append(Resistor(value * (10 ** exponent)))
@@ -112,6 +114,11 @@ def main() -> None:
     # Precise resistor
 
     components.append(Resistor(560000, True))
+    components.append(Resistor(8060, True))
+
+    # Resistor array
+
+    components.append(Resistor(2200, False, True))
 
     # Capacitors
 
@@ -138,6 +145,8 @@ def main() -> None:
     components.append(PNPBJT("A1015",  "2", "3", "1", "-1.1 (-5) V", "-150 mA", "-50 V"))
     components.append(NPNBJT("C1815",  "2", "3", "1", "1 (5) V", "150 mA", "50 V"))
     components.append(NPNBJT("C945",   "2", "3", "1", "1 (5) V", "150 mA", "50 V"))
+    components.append(NPNBJT(Label("PMBT2222A", .75), "3", "1", "2", "0.6 (6) V", "600 mA", "40 V"))
+    components.append(NPNBJT(Label("SMMBT3904", .7), "3", "1", "2", "0.65 (6) V", "200 mA", "40 V"))
 
     components.append(NPNBJT("S8050", "3", "2", "1", "1 (6) V", "1.5 A", "25 V"))
     components.append(PNPBJT("S8550", "3", "2", "1", "-0.66 (-6) V", "-1.5 A", "-25 V"))
@@ -161,17 +170,24 @@ def main() -> None:
 
     components.append(NMOSFET("IRF520", "1", "2", "3", "2..4 V", "6.5 A", "100 V"))
     components.append(PMOSFET("IRF9520", "1", "2", "3", "-2..4 V", "-4.8 A", "-100 V"))
+    components.append(NMOSFET(Label("DMN2040U", .75), "1", "3", "2", "0.5..1.2 V", "6 A", "20 V"))
+    components.append(PMOSFET(Label("DMP2123L", .75), "1", "3", "2", "-0.6..1.3 V", "-3 A", "-20 V"))
+    components.append(NMOSFET(Label("AO3400A", .8), "1", "3", "2", "0.7..1.4 V", "5 A", "30 V"))
+    components.append(PMOSFET(Label("AO3401A", .8), "1", "3", "2", "-0.4..1.3 V", "-4 A", "-30 V"))
 
     # Diodes
 
+    components.append(Diode("1N4001", "1.1 V", "1 A", "50 V"))
+    components.append(Diode("1N4148W", "1 V", "300 mA", "75 V"))
     components.append(Diode("1N4148", "1 V", "300 mA", "75 V"))
     components.append(Diode("1N4007", "1.1 V", "1 A", "1 kV"))
 
-    components.append(SchottkyDiode("PMEG3050", "360 mV", "5 A", "30 V"))
+    components.append(SchottkyDiode(Label("PMEG3050", .8), "360 mV", "5 A", "40 V"))
     components.append(SchottkyDiode("BAT41", "400 mV", "100 mA", "100 V"))
     components.append(SchottkyDiode("1N5819", "600 mV", "1 A", "40 V"))
     components.append(SchottkyDiode("BAT85", "400 mV", "200 mA", "30 V"))
-    
+    components.append(SchottkyDiode("BAT54S", "800 mV", "0.2 A", "30 V"))
+
     components.append(ZenerDiode("ZPD3V6", "3.4-3.8 V", "5 mA", "1 V"))
 
     # Diodes that emit light
@@ -179,6 +195,7 @@ def main() -> None:
     components.append(LED("5 mm", "1.2 V", "20 mA", "940 nm", HexColor("#800000")))
     components.append(LED("5 mm", "3.0-3.2 V", "20 mA", "* nm", HexColor("#FFFFFF")))
     components.append(LED("5 mm", "1.9-2.1 V", "20 mA", "620-625 nm", HexColor("#FF0000")))
+    components.append(LED("5 mm", "1.9-2.1 V", "20 mA", "610-615 nm", HexColor("#FFAA00")))
     components.append(LED("5 mm", "1.9-2.1 V", "20 mA", "588-590 nm", HexColor("#FFFF00")))
     components.append(LED("5 mm", "2.1-3.0 V", "20 mA", "567-570 nm", HexColor("#00FF00")))
     components.append(LED("5 mm", "3.0-3.2 V", "20 mA", "455-465 nm", HexColor("#0000FF")))
@@ -188,7 +205,15 @@ def main() -> None:
     components.append(LED("3 mm", "1.9-2.1 V", "20 mA", "588-590 nm", HexColor("#FFFF00")))
     components.append(LED("3 mm", "2.1-3.0 V", "20 mA", "567-570 nm", HexColor("#00FF00")))
     components.append(LED("3 mm", "3.0-3.2 V", "20 mA", "455-465 nm", HexColor("#0000FF")))
-    
+
+    # Diodes that emit light of the SMD variety
+
+    components.append(LED("0603", "2.3 V", "20 mA", "625 nm", HexColor("#FF0000")))
+    components.append(LED("0603", "3.3 V", "20 mA", "626 nm", HexColor("#00FF00")))
+    components.append(LED("0603", "3.3 V", "20 mA", "470 nm", HexColor("#0000FF")))
+    components.append(LED("2020", "2/2.7/2.8 V", "8/5/3 mA", "622/525/468 nm", HexColor("#FFFFFF")))
+    components.append(LED("3528", "5 V", "12 mA", "625/525/470 nm", HexColor("#FFFFFF")))
+
     # Springs
 
     components.append(ExtensionSpring("5 mm", "20.5 mm"))
@@ -215,6 +240,7 @@ def main() -> None:
 
     # Threaded inserts
 
+    components.append(ThreadedInsert("M2", "3.2 mm", "3 mm"))
     components.append(ThreadedInsert("M2", "3.5 mm", "3 mm"))
     components.append(ThreadedInsert("M2", "3.5 mm", "4 mm"))
     components.append(ThreadedInsert("M2", "3.5 mm", "5 mm"))
@@ -231,7 +257,8 @@ def main() -> None:
     components.append(RoundHeadScrew("M2", "4 mm", "1.7 mm", "5 mm")) # Length is a separate parameter
     components.append(RoundHeadScrew("M2", "4 mm", "1.7 mm", "6 mm"))
     components.append(RoundHeadScrew("M2", "4 mm", "1.7 mm", "8 mm"))
-    
+
+
     components.append(RoundHeadScrew("M2x5", "4 mm", "1.7 mm")) # Length is part of the name for easier searching
     components.append(RoundHeadScrew("M2x6", "4 mm", "1.7 mm"))
     components.append(RoundHeadScrew("M2x8", "4 mm", "1.7 mm"))
@@ -261,6 +288,7 @@ def main() -> None:
     components.append(RoundHeadScrew("M3x12", "6 mm", "2.6 mm"))
     components.append(RoundHeadScrew("M3x16", "6 mm", "2.6 mm"))
     components.append(RoundHeadScrew("M3x20", "6 mm", "2.6 mm"))
+    components.append(RoundHeadScrew("M3x30", "6 mm", "2.6 mm"))
 
     components.append(RoundHeadScrew("M5", "10 mm", "4.2 mm", "6 mm"))
     components.append(RoundHeadScrew("M5", "10 mm", "4.2 mm", "30 mm"))
@@ -285,7 +313,17 @@ def main() -> None:
 
     # Recessed head screws
 
+    components.append(RecessedHeadScrew("M2x1.5", "3.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2x2.5", "3.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2x3.5", "3.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2x5.5", "3.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2.5x2", "4.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2.5x2.5", "4.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2.5x3.5", "4.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2.5x5", "4.5 mm", "1.5 mm"))
+    components.append(RecessedHeadScrew("M2.5x7", "4.5 mm", "1.5 mm"))
     components.append(RecessedHeadScrew("M3", "5.6 mm", "2 mm", "7 mm"))
+    components.append(RecessedHeadScrew("M3x3", "5 mm", "2 mm"))
     components.append(RecessedHeadScrew("M3x7", "5.6 mm", "2 mm"))
 
     # Hex nuts
@@ -312,6 +350,17 @@ def main() -> None:
     components.append(LED("???", "??? V", "??? mA", "??? nm", HexColor("#FFC0C0")))
     components.append(Diode("???", "? V", "??? mA", "??? V"))
     components.append(NPNBJT("???", "?", "?", "?", "??? V", "??? A", "??? V"))
+
+    # Polyfuses
+
+    components.append(Polyfuse("6 V", "1 A", "1206"))
+    components.append(Polyfuse("6 V", "1.5 A", "1206"))
+    components.append(Polyfuse("12 V", "2 A", "1206"))
+    components.append(Polyfuse("9 V", "0.2 A", "0603"))
+
+    # Generic component (ICs, ...)
+
+    components.append(Generic("PSM712"))
 
     # ############################################################################
     # Further configuration options
