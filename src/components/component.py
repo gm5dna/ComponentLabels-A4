@@ -201,31 +201,24 @@ class Component:
         return self.get_prefixed_number() + " " + self.get_prefix() + self.units
 
 class BasicComponent(Component):
-    def draw(self, c: Canvas, rect: StickerRect, draw_center_line: bool) -> None:
-        # Draw middle line
-        if draw_center_line:
-            c.setStrokeColor(black, 0.25)
-            c.setLineWidth(0.7)
-            c.line(rect.left,
-                   rect.bottom + rect.height/2,
-                   rect.left + rect.width,
-                   rect.bottom + rect.height/2)
+    def __init__(self):
+        self.single_sided = False
 
-        # Draw resistor value
+    def single_side(self):
+        self.single_sided = True
+        return self
+
+    def draw(self, c: Canvas, rect: StickerRect, draw_center_line: bool) -> None:
         print("Generating sticker '{}' ({})".format(self.value, self.type))
 
         value_font_size = 0.20 * inch
-        small_font_size = 0.08 * inch
+        small_font_size = 0.108 * inch
 
-        text_x = rect.left + rect.width/2 
-        label = Label.to_label(self.value)
-        text_bottom = rect.bottom + rect.height/4 - value_font_size * label.size/3
-        c.setFont('main', value_font_size * label.size)
-        c.drawCentredString(text_x, text_bottom, label.text)
-        c.drawCentredString(text_x, text_bottom+rect.height/2, label.text)
+        text_x = rect.left + rect.width / 2 
+        text_bottom = rect.bottom + rect.height / 4
 
         small_text_x = rect.left + 5 * rect.width / 6
-        small_text_bottom = rect.bottom + rect.height/8 + rect.height/4 - small_font_size/3
+        small_text_bottom = rect.bottom + rect.height / 8 + rect.height / 4
 
         if self.str1 == None:
             small_text_bottom -= rect.height / 16
@@ -236,38 +229,63 @@ class BasicComponent(Component):
         if self.str3 == None:
             small_text_bottom -= rect.height / 16
 
-        c.setStrokeColor(black, 1)
-        c.setLineWidth(2)
-        c.setLineCap(1)
-        
-        for i in (0,rect.height/2):
-            c.setFont('main', small_font_size * 1.35)
+        def draw(pos):
+            Label.to_label(self.value).draw_centered(c, text_x, text_bottom + pos, value_font_size)
+
+            c.setFont('main', small_font_size)
 
             bottom = small_text_bottom
             
             if self.str1 != None:
-                c.drawCentredString(small_text_x, i + bottom, self.str1)
+                Label.to_label(self.str1).draw_centered(c, small_text_x, bottom + pos, small_font_size)
                 bottom -= rect.height / 8
 
             if self.str2 != None:
-                c.drawCentredString(small_text_x, i + bottom, self.str2)
+                Label.to_label(self.str2).draw_centered(c, small_text_x, bottom + pos, small_font_size)
                 bottom -= rect.height / 8
             
             if self.str3 != None:
-                c.drawCentredString(small_text_x, i + bottom, self.str3)
+                Label.to_label(self.str3).draw_centered(c, small_text_x, bottom + pos, small_font_size)
                 bottom -= rect.height / 8
 
-            self.draw_icon(c, rect.left + rect.width / 6, rect.bottom + rect.height/4 + i, rect.height / 6)
+            self.draw_icon(c, rect.left + rect.width / 6, rect.bottom + rect.height/4 + pos, rect.height / 6)
+            pass
+
+        if not hasattr(self, "single_sided") or not self.single_sided:
+            if draw_center_line:
+                c.setStrokeColor(black, 0.25)
+                c.setLineWidth(0.7)
+                c.line(rect.left,
+                       rect.bottom + rect.height/2,
+                       rect.left + rect.width,
+                       rect.bottom + rect.height/2)
+
+            print("djsklfa");
+
+            c.setStrokeColor(black, 1)
+            c.setLineWidth(2)
+            c.setLineCap(1)
+            
+            for pos in (0,rect.height/2):
+                draw(pos)
+        else:
+            draw(rect.height / 4)
         
         c.setLineCap(0)
 
 class Label:
-    def __init__(self, text: str, size: float):
+    def __init__(self, text: str, size: float = 1):
         self.text = text
         self.size = size
+        self.multiline = False
+        self.line_spacing = 1.25
 
     def __str__(self):
         return self.text
+
+    def set_multiline(self, line_spacing: float = 1.25):
+        self.multiline = True
+        self.line_spacing = line_spacing
 
     @staticmethod
     def to_label(text: "str | Label"):
@@ -275,4 +293,17 @@ class Label:
             return text
 
         return Label(text, 1.0)
+
+    def draw_centered(self, c: Canvas, x: float, y: float, size_scale: float):
+        size = self.size * size_scale
+
+        c.setFont('main', size)
+
+        lines = self.text.split("\n")
+
+        y += (len(lines) - 1) * size / 2 * self.line_spacing
+
+        for line in lines:
+            c.drawCentredString(x, y - size / 3, line)
+            y -= size * self.line_spacing
 
