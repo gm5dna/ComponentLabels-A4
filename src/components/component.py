@@ -270,7 +270,7 @@ class Label:
         return self.text
 
     @staticmethod
-    def to_label(text: str | Label):
+    def to_label(text: "str | Label"):
         if isinstance(text, Label):
             return text
 
