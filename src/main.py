@@ -61,7 +61,7 @@ def render_outlines(c: Canvas, layout: PaperConfig) -> None:
     for row in range(layout.num_stickers_vertical):
         for column in range(layout.num_stickers_horizontal):
             with StickerRect(c, layout, row, column, False) as rect:
-                c.setStrokeColor(black, 0.1)
+                c.setStrokeColor(black, 0.5)
                 c.setLineWidth(0)
                 c.roundRect(rect.left, rect.bottom, rect.width, rect.height, rect.corner)
 
@@ -131,10 +131,10 @@ def main() -> None:
     for value in capacitor_values:
         components.append(Capacitor(value * .000000000001))
 
-    # Padding
+    # Padding (if necessary)
 
-    components.append(None)
-    components.append(None)
+    # components.append(None)
+    # components.append(None)
 
     # Inductors
 
@@ -316,7 +316,7 @@ def main() -> None:
     components.append(RoundHeadScrew("M5x25", "10 mm", "4.2 mm"))
     components.append(RoundHeadScrew("M5x30", "10 mm", "4.2 mm"))
 
-    # Flat head screws
+    # Flat head9  screws
 
     components.append(FlatHeadScrew("M2.5", "4.4 mm", "1.8 mm", "12 mm"))
     components.append(FlatHeadScrew("M2.5", "4.4 mm", "1.8 mm", "14 mm"))
@@ -378,6 +378,48 @@ def main() -> None:
     # Generic component (ICs, ...)
 
     components.append(Generic("PSM712"))
+
+    # Generic single-sided text labels
+
+    components.append(Generic("16x2 char LCD\nHD44780-compatible\n5 V, no backlight").single_side())
+
+    components.append(Generic(Label("40x4 char LCD\nWH4004A-YGH-ET#\nHD44780-compatible\n5 V, green backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("40x2 char LCD\nDMC2079\nHD44780-compatible\n5 V, green backlight", 0.9)).single_side())
+
+    components.append(Generic("16x2 char LCD\nHD44780-compatible\n5 V, green backlight").single_side())
+
+    components.append(Generic("12x2 char LCD\nHD44780-compatible\n3.3 V, green backlight").single_side())
+
+    components.append(Generic("20x4 char LCD\nHD44780-compatible\n5 V, blue backlight").single_side())
+
+    components.append(Generic(Label("6.2\" 360x960 IPS\nER-TFT062-1-3723\nGC9503V\n2.8 V, 12 V backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("4.58\" 360x960 IPS\nER-TFT4.58-1-3723\nST7701S\n2.8 V, 12 V backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("2.2\" 132x32 OLED\nRET013232A\nSSD1305\n3.3 V, yellow dots", 0.9)).single_side())
+
+    components.append(Generic(Label("84x48 LCD\nYeeted from Nokia 5110\nPCD8544\n3.3 V, white backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("3.95\" 720x720 IPS\nER-TFT3.95-1\nNV3052C\n2.8 V, 15 V backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("2.9\" 128x64 LCD\nERMC12864FS-2\nAIP31108\n3.3 V, white backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("1.7\" 128x64 LCD\nERM12864FSF-9\nST7567\n3.3 V, white backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("2\" 192x64 LCD\nERM19264FS-4\nUC1609C\n3.3 V, white backlight", 0.9)).single_side())
+
+    components.append(Generic(Label("2.2\" 128x32 OLED\nER-OLED022-1W\nSSD1305\n3.3 V, white dots", 0.9)).single_side())
+
+    components.append(Generic(Label("16x2 char LCD\nERC1602FS-4\nST7032i\n3.3-5 V, 3 V 15 mA white bl.", 0.9)).single_side())
+
+    components.append(Generic("96x68 LCD\nHX1230\n3.3-5 V, white backlight").single_side())
+
+    components.append(Generic("0.66\" 64x48 OLED\nSSD1306\n3.3 V, white dots").single_side())
+
+    components.append(Generic(Label("1.54\" 152x152 Eink\nGDEW0154T8D\nUC8151D\n3.3 V, no backlight", 0.9)).single_side())
+
+    components.append(Generic("1.28\" 128x128 memory LCD\nLS013B7DH03\n3 V, no backlight").single_side())
 
     # ############################################################################
     # Further configuration options
