@@ -15,6 +15,13 @@ from src.components.spring import CompressionSpring, ExtensionSpring
 from src.components.generic import Generic
 from src.components.polyfuse import Polyfuse
 from src.components.inductor import Inductor
+from src.components.opamp import OperationalAmplifier
+from src.components.adc import AnalogDigitalConverter
+from src.components.optocoupler import Optocoupler
+from src.components.tvsdiode import TVSDiode
+from src.components.crystal import Crystal
+from src.components.dcdcconverter import DCDCConverter
+from src.components.voltageregulator import VoltageRegulator
 from src.paperconfig import PaperConfig, AVERY_5260, AVERY_L7157, VYSOCINA
 from src.stickerrect import StickerRect
 
@@ -152,6 +159,31 @@ def main() -> None:
     components.append(Inductor("1 μH", "4.1 A", "1008"))
     components.append(Inductor("68 μH", "1.33 A", "8.7 dia", 0.75))
 
+    # Op Amps
+
+    components.append(OperationalAmplifier("MCP6002", "2", "1.8-6V"))
+
+    # Analog-digital converters
+
+    components.append(AnalogDigitalConverter("MCP3002", "2", "5 V", "10 bit"))
+
+    # Optocouplers
+
+    components.append(Optocoupler("HCPL-2601", "1", "5 kVrms", "10 MBd"))
+    components.append(Optocoupler("HCPL-2630", "2", "5 kVrms", "10 MBd"))
+
+    # DC/DC converters
+
+    components.append(DCDCConverter("NMF0505SC", "1 W", "5 V", "5 V"))
+
+    # Voltage regulators
+
+    components.append(VoltageRegulator("LM2596T", "40 V", "5 V", "3 A"))
+
+    # Crystals
+
+    components.append(Crystal("AB26T", "32.768kHz", "6 pF"))
+
     # BJTs
 
     components.append(NPNBJT("2N2222", "3", "2", "1", "0.6 (6) V", "600 mA", "40 V"))
@@ -199,15 +231,19 @@ def main() -> None:
     components.append(Diode("1N4148", "1 V", "300 mA", "75 V"))
     components.append(Diode("1N4007", "1.1 V", "1 A", "1 kV"))
 
+    # Schottky Diodes
+
     components.append(SchottkyDiode(Label("PMEG3050", .8), "360 mV", "5 A", "40 V"))
     components.append(SchottkyDiode("BAT41", "400 mV", "100 mA", "100 V"))
     components.append(SchottkyDiode("1N5819", "600 mV", "1 A", "40 V"))
     components.append(SchottkyDiode("BAT85", "400 mV", "200 mA", "30 V"))
     components.append(SchottkyDiode("BAT54S", "800 mV", "0.2 A", "30 V"))
 
+    # Zener Diodes
+
     components.append(ZenerDiode("ZPD3V6", "3.4-3.8 V", "5 mA", "1 V"))
 
-    # Diodes that emit light
+    # LEDs
 
     components.append(LED("5 mm", "1.2 V", "20 mA", "940 nm", HexColor("#800000")))
     components.append(LED("5 mm", "3.0-3.2 V", "20 mA", "* nm", HexColor("#FFFFFF")))
@@ -375,9 +411,10 @@ def main() -> None:
     components.append(Polyfuse("12 V", "2 A", "1206"))
     components.append(Polyfuse("9 V", "0.2 A", "0603"))
 
-    # Generic component (ICs, ...)
+    # TVS Diodes
 
-    components.append(Generic("PSM712"))
+    components.append(TVSDiode("PSM712"))
+    components.append(TVSDiode("1.5KE27A"))
 
     # Generic single-sided text labels
 
@@ -451,4 +488,3 @@ def main() -> None:
 
     # Store canvas to PDF file
     c.save()
-
