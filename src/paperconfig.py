@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import A4, LETTER
 from reportlab.lib.units import inch, mm
-from typing import Tuple
+from typing import Dict, List, Set, Tuple
 
 class PaperConfig:
     def __init__(
@@ -105,4 +105,66 @@ VYSOCINA = PaperConfig( # Available from: https://www.obalyvysocina.cz/produkty/
 )
 
 
+# Avery L7160 (and physically-equivalent inkjet variant J8160).
+# A4, 21 labels per sheet (3 columns x 7 rows), 63.5 x 38.1 mm each.
+# This is one of the most widely-stocked label sheets in the UK.
+# Margins/stride taken from Avery's published L7160 dimensions; verify
+# against an actual sheet using scripts/check_alignment.py before
+# committing to a box of labels.
+AVERY_L7160 = PaperConfig(
+    paper_name="Avery L7160",
+    pagesize=A4,
+    sticker_width=63.5 * mm,
+    sticker_height=38.1 * mm,
+    sticker_corner_radius=2 * mm,
+    left_margin=7.21 * mm,
+    top_margin=15.1 * mm,
+    horizontal_stride=66 * mm,
+    vertical_stride=38.1 * mm,
+    num_stickers_horizontal=3,
+    num_stickers_vertical=7,
+)
 
+
+# Lookup table for the --layout CLI flag. Keys are normalised to upper-case
+# at lookup time, so users may pass "L7160", "l7160", or "AVERY_L7160".
+# J8160 is an alias for L7160 (same physical layout, different Avery SKU).
+LAYOUTS: Dict[str, PaperConfig] = {
+    "5260": AVERY_5260,
+    "AVERY_5260": AVERY_5260,
+    "L7157": AVERY_L7157,
+    "AVERY_L7157": AVERY_L7157,
+    "J8157": AVERY_J8157,
+    "AVERY_J8157": AVERY_J8157,
+    "L7160": AVERY_L7160,
+    "AVERY_L7160": AVERY_L7160,
+    "J8160": AVERY_L7160,
+    "EJ24": EJ_RANGE_24,
+    "EJ_RANGE_24": EJ_RANGE_24,
+    "VYSOCINA": VYSOCINA,
+}
+
+
+def resolve_layout(name: str) -> PaperConfig:
+    """Look up a layout by case-insensitive name. Raises KeyError if unknown."""
+    return LAYOUTS[name.upper()]
+
+
+def list_layout_names() -> str:
+    """Return a human-readable list of available layouts for --list-layouts and error messages."""
+    aliases_by_id: Dict[int, List[str]] = {}
+    for key, cfg in LAYOUTS.items():
+        aliases_by_id.setdefault(id(cfg), []).append(key)
+
+    lines: List[str] = []
+    seen_ids: Set[int] = set()
+    for cfg in LAYOUTS.values():
+        if id(cfg) in seen_ids:
+            continue
+        seen_ids.add(id(cfg))
+        names = ", ".join(aliases_by_id[id(cfg)])
+        page = "A4" if cfg.pagesize == A4 else ("Letter" if cfg.pagesize == LETTER else "?")
+        grid = f"{cfg.num_stickers_horizontal}x{cfg.num_stickers_vertical}"
+        size = f"{cfg.sticker_width / mm:.1f} x {cfg.sticker_height / mm:.1f} mm"
+        lines.append(f"  {names:<32} {cfg.paper_name:<24} {page}  {grid:<5}  {size}")
+    return "\n".join(lines)

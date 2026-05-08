@@ -1,3 +1,6 @@
+import argparse
+import sys
+
 from reportlab.lib.colors import HexColor, black
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.pdfbase import pdfmetrics
@@ -22,7 +25,15 @@ from src.components.tvsdiode import TVSDiode
 from src.components.crystal import Crystal
 from src.components.dcdcconverter import DCDCConverter
 from src.components.voltageregulator import VoltageRegulator
-from src.paperconfig import PaperConfig, AVERY_5260, AVERY_L7157, VYSOCINA
+from src.paperconfig import (
+    PaperConfig,
+    AVERY_5260,
+    AVERY_L7157,
+    AVERY_L7160,
+    VYSOCINA,
+    list_layout_names,
+    resolve_layout,
+)
 from src.stickerrect import StickerRect
 
 from typing import List
@@ -72,15 +83,56 @@ def render_outlines(c: Canvas, layout: PaperConfig) -> None:
                 c.setLineWidth(0)
                 c.roundRect(rect.left, rect.bottom, rect.width, rect.height, rect.corner)
 
-def main() -> None:
-    pdfmetrics.registerFont(TTFont('main', 'Roboto-Bold.ttf'))
+DEFAULT_LAYOUT = "VYSOCINA"
+DEFAULT_OUTPUT = "ComponentLabels.pdf"
 
-    # ############################################################################
-    # Select the correct type of paper you want to print on.
-    # ############################################################################
-    layout = VYSOCINA
-    # layout = AVERY_L7157
-    # layout = EJ_RANGE_24
+
+def parse_args(argv: List[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="LabelGenerator",
+        description="Generate a PDF of component labels for printing on Avery / similar label sheets.",
+    )
+    parser.add_argument(
+        "--layout",
+        default=DEFAULT_LAYOUT,
+        help=(
+            "Label sheet preset to render onto. Case-insensitive; accepts the short form "
+            "(e.g. L7160) or the full constant name (AVERY_L7160). "
+            "Use --list-layouts to see all available presets. "
+            "Default: %(default)s."
+        ),
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        default=DEFAULT_OUTPUT,
+        help="Output PDF path. Default: %(default)s.",
+    )
+    parser.add_argument(
+        "--list-layouts",
+        action="store_true",
+        help="Print available layout presets and exit.",
+    )
+    return parser.parse_args(argv)
+
+
+def main() -> None:
+    args = parse_args()
+
+    if args.list_layouts:
+        print("Available layouts:\n")
+        print(list_layout_names())
+        return
+
+    try:
+        layout = resolve_layout(args.layout)
+    except KeyError:
+        print(f"Error: unknown layout '{args.layout}'.\n", file=sys.stderr)
+        print("Available layouts:", file=sys.stderr)
+        print(list_layout_names(), file=sys.stderr)
+        sys.exit(2)
+
+    pdfmetrics.registerFont(TTFont('main', 'Roboto-Bold.ttf'))
 
     # ############################################################################
     # Put your own component values in here!
@@ -481,7 +533,7 @@ def main() -> None:
     # ############################################################################
 
     # Create the render canvas
-    c = Canvas("ComponentLabels.pdf", pagesize=layout.pagesize)
+    c = Canvas(args.output, pagesize=layout.pagesize)
 
     # Render the stickers
     render_stickers(c, layout, components, draw_outlines, draw_center_line)
