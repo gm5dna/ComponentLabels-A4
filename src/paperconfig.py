@@ -105,6 +105,29 @@ VYSOCINA = PaperConfig( # Available from: https://www.obalyvysocina.cz/produkty/
 )
 
 
+# Avery L7159 (and physically-equivalent variants: inkjet J8159, EU LR7159).
+# A4, 24 labels per sheet (3 columns x 8 rows), 63.5 x 33.9 mm each.
+# Margins are LabelPlanet's measured values for this Avery template
+# (top 12.9 mm, left 7.25 mm). Corner radius is estimated (Avery only
+# states "rounded corners"). Verify against an actual sheet using
+# scripts/check_alignment.py before committing to a box of labels.
+# Note: same physical label size as EJ_RANGE_24 but Avery's margins
+# differ, so this is a separate preset.
+AVERY_L7159 = PaperConfig(
+    paper_name="Avery L7159",
+    pagesize=A4,
+    sticker_width=63.5 * mm,
+    sticker_height=33.9 * mm,
+    sticker_corner_radius=2 * mm,
+    left_margin=7.25 * mm,
+    top_margin=12.9 * mm,
+    horizontal_stride=66 * mm,
+    vertical_stride=33.9 * mm,
+    num_stickers_horizontal=3,
+    num_stickers_vertical=8,
+)
+
+
 # Avery L7160 (and physically-equivalent inkjet variant J8160).
 # A4, 21 labels per sheet (3 columns x 7 rows), 63.5 x 38.1 mm each.
 # This is one of the most widely-stocked label sheets in the UK.
@@ -136,6 +159,10 @@ LAYOUTS: Dict[str, PaperConfig] = {
     "AVERY_L7157": AVERY_L7157,
     "J8157": AVERY_J8157,
     "AVERY_J8157": AVERY_J8157,
+    "L7159": AVERY_L7159,
+    "AVERY_L7159": AVERY_L7159,
+    "J8159": AVERY_L7159,
+    "LR7159": AVERY_L7159,
     "L7160": AVERY_L7160,
     "AVERY_L7160": AVERY_L7160,
     "J8160": AVERY_L7160,
