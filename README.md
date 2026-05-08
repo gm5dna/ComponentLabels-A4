@@ -5,8 +5,11 @@ This script generates labels for zip bags with all sorts of electronic or mechan
 > **Fork notes.** This is a UK-friendly fork of [prochazkaml/ComponentLabels](https://codeberg.org/prochazkaml/ComponentLabels) on Codeberg. The differences from upstream are:
 >
 > - Adds a preset for **Avery L7160** (A4, 21 labels per sheet, 63.5 × 38.1 mm) — the most widely-stocked label sheet in UK stationers. **J8160** is registered as an alias.
+> - Adds a preset for **Avery L7159** (A4, 24 labels per sheet, 63.5 × 33.9 mm), with **J8159** and **LR7159** as aliases.
 > - Default layout switched to **L7159**.
 > - Adds a proper command-line interface (`--layout`, `-o/--output`, `--list-layouts`) so you no longer need to edit `main.py` to pick a sheet or output filename.
+>
+> Both new presets have been print-tested on real Avery sheets (May 2026). You should still do your own dry run on plain A4 first — see the printing notes below — because alignment depends on your specific printer.
 
 It is primarily meant for [these](https://www.obalyvysocina.cz/produkty/samolepici-etikety) labels (70x25.4 mm) and [these](https://www.obalyvysocina.cz/produkty/rychlouzaviraci-sacek-extra-pevny#rychlouzaviraci-sacek-silny8x12) 8x12 cm zip bags. The generator also supports AVERY L7159 (default in this fork), L7160, 5260, L7157, [J8157](https://github.com/prochazkaml/ComponentLabels/pull/1), J8160, and EJ Range 24 labels.
 
