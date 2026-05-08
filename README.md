@@ -1,8 +1,14 @@
-# ComponentLabels
+# ComponentLabels (UK / Avery L7159 fork)
 
 This script generates labels for zip bags with all sorts of electronic or mechanical components.
 
-It is primarily meant for [these](https://www.obalyvysocina.cz/produkty/samolepici-etikety) labels (70x25.4 mm) and [these](https://www.obalyvysocina.cz/produkty/rychlouzaviraci-sacek-extra-pevny#rychlouzaviraci-sacek-silny8x12) 8x12 cm zip bags. However, the generator script also supports AVERY 5260, AVERY L7157 and [AVERY J8157](https://github.com/prochazkaml/ComponentLabels/pull/1) labels.
+> **Fork notes.** This is a UK-friendly fork of [prochazkaml/ComponentLabels](https://codeberg.org/prochazkaml/ComponentLabels) on Codeberg. The differences from upstream are:
+>
+> - Adds a preset for **Avery L7160** (A4, 21 labels per sheet, 63.5 × 38.1 mm) — the most widely-stocked label sheet in UK stationers. **J8160** is registered as an alias.
+> - Default layout switched to **L7159**.
+> - Adds a proper command-line interface (`--layout`, `-o/--output`, `--list-layouts`) so you no longer need to edit `main.py` to pick a sheet or output filename.
+
+It is primarily meant for [these](https://www.obalyvysocina.cz/produkty/samolepici-etikety) labels (70x25.4 mm) and [these](https://www.obalyvysocina.cz/produkty/rychlouzaviraci-sacek-extra-pevny#rychlouzaviraci-sacek-silny8x12) 8x12 cm zip bags. The generator also supports AVERY L7159 (default in this fork), L7160, 5260, L7157, [J8157](https://github.com/prochazkaml/ComponentLabels/pull/1), J8160, and EJ Range 24 labels.
 
 ![Some examples of ComponentLabels](./componentlabels.webp)
 
@@ -24,12 +30,23 @@ It is primarily meant for [these](https://www.obalyvysocina.cz/produkty/samolepi
 # Usage
 
 - Install python3
-- Install the python3 library `reportlab`. This library is used to do the actual PDF generation.
-- Add your own required resistor values in `main()` of `LabelGenerator.py`.
-- If using Avery labels, change the `layout` value in `main()` to `AVERY_L7157`, `AVERY_5260` or `AVERY_J8157`.
-- Run the script `LabelGenerator.py`!
+- Install the python3 library `reportlab` (`pip install -r requirements.txt`). This library is used to do the actual PDF generation.
+- Edit the component list in `main()` of `src/main.py` to match the components you want to label.
+- Run the script:
 
-It will now generate a `ResistorLabels.pdf` that can be used to print onto your label of choice.
+```sh
+python3 LabelGenerator.py                      # defaults to Avery L7159 → ComponentLabels.pdf
+python3 LabelGenerator.py --layout 5260 -o letter.pdf
+python3 LabelGenerator.py --list-layouts       # show all available presets
+```
+
+`--layout` is case-insensitive and accepts both short (`L7159`) and full (`AVERY_L7159`) names. J8159 is treated as an alias for L7159 — they have identical physical layouts.
+
+## Printing — important
+
+**Print at 100 % / "Actual size".** Disable any "Fit to page" or "Scale to printable area" option in your printer dialog. If the PDF is scaled, labels will not align with the sheet and you'll waste a sheet of stickers.
+
+Before committing to a £15 box of labels, do a dry run on plain A4: print one page at 100 %, hold it against a real label sheet up to a window, and confirm the rectangles overlay within ~1 mm. The included `scripts/check_alignment.py` (see below) can also overlay the generated PDF on a scanned blank label sheet.
 
 # Label alignment helper script
 
@@ -43,9 +60,7 @@ Of course, this script assumes that your scanner is properly aligned and set to 
 
 # Credits
 
-This is forked from https://github.com/securelyfitz/ResistorLabels, which is in turn a fork of https://github.com/Finomnis/ResistorLabels.
+This UK fork is based on [prochazkaml/ComponentLabels](https://codeberg.org/prochazkaml/ComponentLabels), which is itself forked from https://github.com/securelyfitz/ResistorLabels — in turn a fork of https://github.com/Finomnis/ResistorLabels.
 
-The original is based on an idea from Zach Poff. I liked the design of securelyfitz's forked labels, I just needed to implement more than resistors.
-
-For more details on how to use these labels, visit [Zach's website](https://www.zachpoff.com/resources/quick-easy-and-cheap-resistor-storage/).
+The original is based on an idea from Zach Poff. For more details on how to use these labels, visit [Zach's website](https://www.zachpoff.com/resources/quick-easy-and-cheap-resistor-storage/).
 

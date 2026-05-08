@@ -83,7 +83,7 @@ def render_outlines(c: Canvas, layout: PaperConfig) -> None:
                 c.setLineWidth(0)
                 c.roundRect(rect.left, rect.bottom, rect.width, rect.height, rect.corner)
 
-DEFAULT_LAYOUT = "VYSOCINA"
+DEFAULT_LAYOUT = "L7159"
 DEFAULT_OUTPUT = "ComponentLabels.pdf"
 
 
@@ -97,7 +97,7 @@ def parse_args(argv: List[str] | None = None) -> argparse.Namespace:
         default=DEFAULT_LAYOUT,
         help=(
             "Label sheet preset to render onto. Case-insensitive; accepts the short form "
-            "(e.g. L7160) or the full constant name (AVERY_L7160). "
+            "(e.g. L7159) or the full constant name (AVERY_L7159). "
             "Use --list-layouts to see all available presets. "
             "Default: %(default)s."
         ),
